@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CivicLens — Government Data Transparency Platform</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="navbar-brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 1L1 5v6l7 4 7-4V5L8 1zm0 2l5 2.9v4.2L8 13 3 10.1V5.9L8 3z"/>
+        </svg>
+      </div>
+      <span class="brand-name">Civic<span>Lens</span></span>
+    </a>
+    <ul class="navbar-nav">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+
+    <div class="hero-eyebrow">Open Government Data</div>
+
+    <h1 class="hero-title">
+      Make <em>sense</em> of<br/>Government Spending
+    </h1>
+
+    <p class="hero-subtitle">
+      AI-powered insights across state budgets, public health, and infrastructure — built for journalists, researchers, and curious citizens.
+    </p>
+
+    <div class="hero-search">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Ask anything — e.g. Compare education budgets of Karnataka and Kerala..."
+        autocomplete="off"
+      />
+      <button onclick="handleSearch()">Search</button>
+    </div>
+
+    <div style="position:relative;z-index:1;margin-bottom:48px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;animation:fadeSlideUp 0.6s ease 0.35s both;">
+      <span style="font-size:0.75rem;color:var(--text-muted);align-self:center;margin-right:4px;">Try:</span>
+      <button class="quick-query" onclick="setQuery('Compare education budgets of Karnataka vs Kerala')">Karnataka vs Kerala education</button>
+      <button class="quick-query" onclick="setQuery('Top states by social services spending 2024')">Top social services spenders</button>
+      <button class="quick-query" onclick="setQuery('Infrastructure budget trends 2020–2024')">Infrastructure trends</button>
+    </div>
+
+    <div class="datasets-section">
+      <p class="datasets-section-title">Available Datasets</p>
+      <div class="dataset-cards">
+        <a href="dashboard.html?dataset=budget" class="dataset-card">
+          <div class="dataset-card-icon">📊</div>
+          <h4>Government Budget</h4>
+          <p>State-level budget allocation and spending across all departments</p>
+        </a>
+        <a href="dashboard.html?dataset=health" class="dataset-card">
+          <div class="dataset-card-icon">🏥</div>
+          <h4>Public Health</h4>
+          <p>Healthcare expenditure, outcomes, and hospital infrastructure</p>
+        </a>
+        <a href="dashboard.html?dataset=infra" class="dataset-card">
+          <div class="dataset-card-icon">🛤️</div>
+          <h4>Infrastructure</h4>
+          <p>Transport, energy, and urban development project budgets</p>
+        </a>
+      </div>
+    </div>
+
+  </section>
+
+  <div style="background:var(--bg-sidebar);padding:20px 48px;display:flex;gap:48px;justify-content:center;flex-wrap:wrap;">
+    <div class="stat-bar-item"><div class="stat-bar-value">36</div><div class="stat-bar-label">States & UTs covered</div></div>
+    <div class="stat-bar-item"><div class="stat-bar-value">5+</div><div class="stat-bar-label">Years of budget data</div></div>
+    <div class="stat-bar-item"><div class="stat-bar-value">12</div><div class="stat-bar-label">Spending sectors</div></div>
+    <div class="stat-bar-item"><div class="stat-bar-value">AI</div><div class="stat-bar-label">Powered insights</div></div>
+  </div>
+
+  <style>
+    .quick-query {
+      padding: 7px 14px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .quick-query:hover {
+      border-color: var(--accent);
+      color: var(--accent-hover);
+      background: var(--accent-subtle);
+    }
+    .stat-bar-item { text-align: center; }
+    .stat-bar-value {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 2px;
+    }
+    .stat-bar-label {
+      font-size: 0.78rem;
+      color: var(--text-on-dark-muted);
+      font-weight: 400;
+    }
+  </style>
+
+  <script>
+    function handleSearch() {
+      const q = document.getElementById('searchInput').value.trim();
+      if (q) window.location.href = `dashboard.html?query=${encodeURIComponent(q)}`;
+    }
+
+    document.getElementById('searchInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleSearch();
+    });
+
+    function setQuery(text) {
+      document.getElementById('searchInput').value = text;
+      document.getElementById('searchInput').focus();
+    }
+
+    const placeholders = [
+      'Ask anything — e.g. Compare education budgets of Karnataka and Kerala...',
+      'Which state spent the most on healthcare in 2023?',
+      'Show infrastructure spending trends over 5 years…',
+      'Top 5 states by social services allocation…',
+    ];
+    let pi = 0;
+    const input = document.getElementById('searchInput');
+    setInterval(() => {
+      if (document.activeElement !== input && !input.value) {
+        pi = (pi + 1) % placeholders.length;
+        input.placeholder = placeholders[pi];
+      }
+    }, 3500);
+  </script>
+
+</body>
+</html>

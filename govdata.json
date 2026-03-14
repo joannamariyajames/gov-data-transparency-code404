@@ -1,0 +1,29 @@
+{
+ "healthcare_budget":[
+  {"state":"Karnataka","year":2023,"budget_amount":35000},
+  {"state":"Tamil Nadu","year":2023,"budget_amount":38000},
+  {"state":"Kerala","year":2023,"budget_amount":30000},
+  {"state":"Maharashtra","year":2023,"budget_amount":42000}
+ ],
+
+ "education_spending":[
+  {"state":"Karnataka","year":2023,"budget_amount":48000},
+  {"state":"Tamil Nadu","year":2023,"budget_amount":50000},
+  {"state":"Kerala","year":2023,"budget_amount":42000},
+  {"state":"Maharashtra","year":2023,"budget_amount":51000}
+ ],
+
+ "infrastructure_projects":[
+  {"state":"Karnataka","year":2023,"budget_amount":20000},
+  {"state":"Tamil Nadu","year":2023,"budget_amount":22000},
+  {"state":"Kerala","year":2023,"budget_amount":18000},
+  {"state":"Maharashtra","year":2023,"budget_amount":24000}
+ ],
+
+ "state_budget_allocation":[
+  {"state":"India","sector":"Education","budget_amount":28},
+  {"state":"India","sector":"Healthcare","budget_amount":18},
+  {"state":"India","sector":"Infrastructure","budget_amount":30},
+  {"state":"India","sector":"Defense","budget_amount":24}
+ ]
+}

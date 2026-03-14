@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CivicLens — Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="navbar-brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 1L1 5v6l7 4 7-4V5L8 1zm0 2l5 2.9v4.2L8 13 3 10.1V5.9L8 3z"/>
+        </svg>
+      </div>
+      <span class="brand-name">Civic<span>Lens</span></span>
+    </a>
+    <ul class="navbar-nav">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="dashboard.html" class="active">Dashboard</a></li>
+    </ul>
+  </nav>
+
+  <div class="dashboard-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Dataset</div>
+        <button class="sidebar-dataset-btn active" onclick="selectDataset(this, 'budget')">
+          Government Budget Data
+        </button>
+        <button class="sidebar-dataset-btn" onclick="selectDataset(this, 'health')" style="margin-top:8px;">
+          Public Health Data
+        </button>
+        <button class="sidebar-dataset-btn" onclick="selectDataset(this, 'infra')" style="margin-top:8px;">
+          Infrastructure Data
+        </button>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Filters</div>
+
+        <div class="filter-group">
+          <label class="filter-label" for="sectorFilter">Sector</label>
+          <select class="filter-select" id="sectorFilter" onchange="applyFilters()">
+            <option value="">All sectors</option>
+            <option value="social" selected>Social services</option>
+            <option value="education">Education</option>
+            <option value="health">Health &amp; welfare</option>
+            <option value="infra">Infrastructure</option>
+            <option value="defence">Defence</option>
+            <option value="agriculture">Agriculture</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label" for="yearFilter">Year</label>
+          <select class="filter-select" id="yearFilter" onchange="applyFilters()">
+            <option value="2024" selected>2024</option>
+            <option value="2023">2023</option>
+            <option value="2022">2022</option>
+            <option value="2021">2021</option>
+            <option value="2020">2020</option>
+            <option value="2019">2019</option>
+            <option value="2018">2018</option>
+            <option value="2017">2017</option>
+            <option value="2016">2016</option>
+            <option value="2015">2015</option>
+            <option value="2014">2014</option>
+            <option value="2013">2013</option>
+            <option value="2012">2012</option>
+            <option value="2011">2011</option>
+            <option value="2010">2010</option>
+            <option value="2009">2009</option>
+            <option value="2008">2008</option>
+            <option value="2007">2007</option>
+            <option value="2006">2006</option>
+            <option value="2005">2005</option>
+            <option value="2004">2004</option>
+            <option value="2003">2003</option>
+            <option value="2002">2002</option>
+            <option value="2001">2001</option>
+            <option value="2000">2000</option>
+            <option value="1999">1999</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label" for="stateFilter">State</label>
+          <select class="filter-select" id="stateFilter" onchange="applyFilters()">
+            <option value="">All states</option>
+            <option value="karnataka">Karnataka</option>
+            <option value="kerala">Kerala</option>
+            <option value="maharashtra">Maharashtra</option>
+            <option value="tamilnadu">Tamil Nadu</option>
+            <option value="up">Uttar Pradesh</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Active Selection</div>
+        <div id="selectionSummary" style="background:rgba(232,160,32,0.1);border:1px solid rgba(232,160,32,0.25);border-radius:var(--radius-sm);padding:12px;font-size:0.78rem;color:var(--text-on-dark-muted);line-height:1.6;">
+          Sector: <span style="color:var(--accent);">Social services</span><br/>
+          Year: <span style="color:var(--accent);">2024</span><br/>
+          State: <span style="color:var(--accent);">All states</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+
+      <div class="content-header">
+        <div class="content-header-left">
+          <h2>Data Visualization</h2>
+          <p id="chartSubtitle">Social services spending across Indian states, 2024</p>
+        </div>
+        <div class="content-meta">
+          <span class="meta-badge" id="unitBadge">INR · ×100,000</span>
+          <span class="meta-badge" id="yearBadge">2024</span>
+        </div>
+      </div>
+
+      <div id="loadingState" style="display:none;" class="chart-container">
+        <div style="display:flex;align-items:center;justify-content:center;gap:12px;color:var(--text-muted);padding:48px 0;">
+          <div class="spinner"></div>
+          <span style="font-size:0.9rem;">Fetching data…</span>
+        </div>
+      </div>
+
+      <div class="chart-container" id="chartCard">
+        <div class="chart-header">
+          <span class="chart-title" id="chartTitle">Budget Data</span>
+          <div class="chart-legend" id="chartLegend"></div>
+        </div>
+        <div class="chart-canvas-wrapper" style="height:320px;">
+          <canvas id="mainChart"></canvas>
+        </div>
+      </div>
+
+      <div class="ai-insight-card" id="aiInsightCard">
+        <div class="ai-insight-header">
+          <span class="ai-badge">AI Insight</span>
+        </div>
+        <p class="ai-insight-text" id="aiInsightText">
+          Loading data…
+        </p>
+        <button class="btn-primary" onclick="explainData()">
+          <svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm.75 10.5h-1.5v-5h1.5v5zm0-6.5h-1.5V3.5h1.5V5z"/>
+          </svg>
+          Explain Data
+        </button>
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="dashboard.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('query')) processNLQuery(params.get('query'));
+
+    function selectDataset(btn, type) {
+      document.querySelectorAll('.sidebar-dataset-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters();
+    }
+
+    function updateSelectionSummary() {
+      const sector = document.getElementById('sectorFilter');
+      const year   = document.getElementById('yearFilter');
+      const state  = document.getElementById('stateFilter');
+      document.getElementById('selectionSummary').innerHTML = `
+        Sector: <span style="color:var(--accent);">${sector.options[sector.selectedIndex].text}</span><br/>
+        Year: <span style="color:var(--accent);">${year.value}</span><br/>
+        State: <span style="color:var(--accent);">${state.options[state.selectedIndex].text || 'All states'}</span>
+      `;
+      document.getElementById('yearBadge').textContent = year.value;
+      document.getElementById('chartSubtitle').textContent =
+        `${sector.options[sector.selectedIndex].text} spending across Indian states, ${year.value}`;
+    }
+
+    function explainData() {
+      const btn = document.querySelector('.btn-primary');
+      btn.innerHTML = 'Analysing…';
+      btn.disabled = true;
+      if (typeof fetchAIInsight === 'function') {
+        fetchAIInsight().finally(() => {
+          btn.innerHTML = `<svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm.75 10.5h-1.5v-5h1.5v5zm0-6.5h-1.5V3.5h1.5V5z"/></svg> Explain Data`;
+          btn.disabled = false;
+        });
+      }
+    }
+
+    updateSelectionSummary();
+  </script>
+
+</body>
+</html>
